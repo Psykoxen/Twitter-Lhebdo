@@ -46,9 +46,9 @@ while certif == False:
                 data = json.load(hst)
                 hst.close()
                 try:
-                        latest = {'title':hashtag(replace(xml.xml_tools(i,'title')[0])),'img':xml.xml_image(str(i))}
+                        latest = {'title':hashtag(replace(xml.xml_tools(i,'title')[0]))+'.','img':xml.xml_image(str(i))}
                 except:
-                        latest = {'title':replace(xml.xml_tools(i,'title')[0]),'img':xml.xml_image(str(i))}
+                        latest = {'title':replace(xml.xml_tools(i,'title')[0])+'.','img':xml.xml_image(str(i))}
                 for j in data['done']:
                         if latest['img'] == j['img']:
                                 already = True
