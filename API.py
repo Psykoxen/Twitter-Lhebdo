@@ -57,7 +57,7 @@ while certif == False:
                                 already == True
                 if not already:
                         timeline.append(latest)
-                        print(' Add  ->'+timeline[-1]['title'])
+                        print(time.ctime()+' | Add  ->'+timeline[-1]['title'])
                         break
 
         if not timeline:
@@ -67,7 +67,7 @@ while certif == False:
                         r = requests.get(timeline[0]['img'], allow_redirects=True)
                         open('tmp.png', 'wb').write(r.content)
                         api.update_with_media(filename='tmp.png',status='| #FRANCE | ~ '+timeline[0]['title'])
-                        print('Tweet -> '+timeline[0]['title'])
+                        print(time.ctime()+' | Tweet -> '+timeline[0]['title'])
                         data['done'].append(timeline[0])
                         hst = open('hst.json',"w")
                         json.dump(data, hst, indent = 6)
@@ -80,6 +80,6 @@ while certif == False:
                         hst = open('hst.json',"w")
                         json.dump(data, hst, indent = 6)
                         hst.close()
-                        print('Tweet -> '+timeline[0]['title'])
+                        print(time.ctime()+' | Tweet -> '+timeline[0]['title'])
                         timeline.pop(0)
                         time.sleep(1800)
