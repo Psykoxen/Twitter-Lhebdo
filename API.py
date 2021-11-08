@@ -24,6 +24,7 @@ hst.close()
 ################################################################## - MAIN - ####################################################################
 
 def hashtag(text):
+        return text
         result = requests.get("http://127.0.0.1:5000/hashtag/" +text)
         return json.loads(result.text)['hashtaged']
 
@@ -45,10 +46,17 @@ while certif == False:
                 hst = open('hst.json')
                 data = json.load(hst)
                 hst.close()
-                try:
-                        latest = {'title':hashtag(replace(xml.xml_tools(i,'title')[0]))+'.','img':xml.xml_image(str(i))}
+                try :
+                        if len(hashtag(replace(xml.xml_select(xml.xml_tools(i,'description')[0],'<![CDATA[')[0]))) <= 266:
+                                latest = {'title':hashtag(replace(xml.xml_select(xml.xml_tools(i,'description')[0],'<![CDATA[')[0])),'img':xml.xml_image(str(i))}
+                        else:
+                                latest = {'title':hashtag(replace(xml.xml_tools(i,'title')[0]))+'.','img':xml.xml_image(str(i))}   
                 except:
-                        latest = {'title':replace(xml.xml_tools(i,'title')[0])+'.','img':xml.xml_image(str(i))}
+                        if len(replace(xml.xml_select(xml.xml_tools(i,'description')[0],'<![CDATA[')[0])) <= 266:
+                                latest = {'title':replace(xml.xml_select(xml.xml_tools(i,'description')[0],'<![CDATA[')[0]),'img':xml.xml_image(str(i))}
+                        else:
+                                latest = {'title':replace(xml.xml_tools(i,'title')[0])+'.','img':xml.xml_image(str(i))}
+                        
                 for j in data['done']:
                         if latest['img'] == j['img']:
                                 already = True

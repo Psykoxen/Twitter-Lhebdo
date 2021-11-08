@@ -11,6 +11,15 @@ def xml_tools(myhtml,tag):
                      res.append(item [ item.find(end_tag)+len(end_tag) : ])
        return res
 
+def xml_select(myhtml,tag):
+       res= []
+       _tag = "]]>"
+       end_tag = tag
+       for item in myhtml.split(_tag):
+              if end_tag in item:
+                     res.append(item [ item.find(end_tag)+len(end_tag) : ])
+       return res
+
 def xml_image(xhtml):
        find= 'url="'
        j = str(xhtml).index(find)
