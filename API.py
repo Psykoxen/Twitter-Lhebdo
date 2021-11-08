@@ -1,9 +1,9 @@
 import json     #Module Json
-import log              #Données Login
+import log      #Données Login
 import time     #Module Time
 import tweepy   #Module Twitter
 import requests #Module requêtes
-import xml              #Module XML
+import xml      #Module XML
 
 ############################################################### - LOGIN TWEET - ####################################################################
 
@@ -81,7 +81,7 @@ while certif == False:
                         json.dump(data, hst, indent = 6)
                         hst.close()
                         timeline.pop(0)
-                        time.sleep(2700)
+                        time.sleep(2400)
                 except:
                         api.update_status('| #FRANCE | ~ '+timeline[0]['title'])
                         data['done'].append(timeline[0])
