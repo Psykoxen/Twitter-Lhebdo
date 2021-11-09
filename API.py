@@ -16,6 +16,7 @@ api = tweepy.API(auth)
 timeline = []
 url = ('https://www.lexpress.fr/rss/alaune.xml')
 certif = False
+meteo = 0
 
 hst = open('hst.json')
 data = json.load(hst)
@@ -24,7 +25,6 @@ hst.close()
 ################################################################## - MAIN - ####################################################################
 
 def hashtag(text):
-        return text
         result = requests.get("http://127.0.0.1:5000/hashtag/" +text)
         return json.loads(result.text)['hashtaged']
 
@@ -38,6 +38,12 @@ def replace(text):
         return text
 
 while certif == False:
+        try :
+                if meteo == (api.user_timeline(user_id=1440361596627288065,count=20, tweet_mode = 'extended')[0]._json['id']):
+                        api.retweet(api.user_timeline(user_id=1440361596627288065,count=20, tweet_mode = 'extended')[0]._json['id'])
+                        print(time.ctime()+' | ReTweet Meteo ')
+        except :
+                print(time.ctime()+' | No Meteo ')
         response = requests.get(url).text
         article = xml.xml_tools(response,'item')
 
