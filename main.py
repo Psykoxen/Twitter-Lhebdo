@@ -5,6 +5,7 @@ import tweepy   #Module Twitter
 import requests #Module requêtes
 import xml      #Module XML
 import datetime #Module Datetime
+from rich import print
 ############################################################### - LOGIN TWEET - ####################################################################
 
 auth = tweepy.OAuthHandler(log.consumer_key, log.consumer_secret)
@@ -17,8 +18,8 @@ timeline = []
 url = ('https://www.lexpress.fr/rss/alaune.xml')
 certif = False
 meteo = 0
+covid = 0
 
-last = str(datetime.datetime.now().year)+'-'+str(datetime.datetime.now().month)+'-'+str(datetime.datetime.now().day)
 hst = open('hst.json')
 data = json.load(hst)
 hst.close()
@@ -37,30 +38,25 @@ def replace(text):
         text = text.replace("&lt;","<")
         text = text.replace("&#039;","'")
         return text
-
-def covid_all(last):
-        data = requests.get("https://coronavirusapifr.herokuapp.com/data/live/france").json()[0]
-        if last != data['date']:
-                message = '|#COVID19| ~ Journée du '+str(data['date'][-2:])+'/'+str(data['date'][-5:-3])+'/'+str(data['date'][:4])+' en #France\n-------------------------------\nNouveaux cas : '+str(data['conf_j1'])+'\nDécés : '+str(data['dchosp'])+' (+'+str(data['incid_dchosp'])+')\n-------------------------------\nOccupation : '+str(int(data['TO']*100))+'%\nHospitalisation : '+str(data['hosp'])+' (+'+str(data['incid_hosp'])+')\nRéanimation : '+str(data['rea'])+' (+'+str(data['incid_rea'])+')\n'
-                api.update_status(message)
-                print(time.ctime()+' | TWEET | Covid Data ')
-                time.sleep(1800)
-                return(data['date'])
-
+"light_goldenrod1"
 while certif == False:
         try :
                 if meteo != (api.user_timeline(user_id=1457877644184330248,count=20, tweet_mode = 'extended')[0]._json['id']):
                         api.retweet(api.user_timeline(user_id=1457877644184330248,count=20, tweet_mode = 'extended')[0]._json['id'])
-                        print(time.ctime()+' | RETWEET | Meteo ')
+                        print('[bold light_goldenrod1]'+time.ctime()+' | RETWEET | Meteo [/bold light_goldenrod1]')
                         meteo = api.user_timeline(user_id=1457877644184330248,count=20, tweet_mode = 'extended')[0]._json['id']
                         time.sleep(1800)
         except :
-                print(time.ctime()+' | ERROR | No Meteo ')
+                print('[bold bright_red]'+time.ctime()+' | ERROR | Meteo [/bold bright_red]')
 
         try :
-                last = covid_all(last)
+                if covid != (api.user_timeline(user_id=1476300686165954564,count=20,tweet_mode='extended')[0]._json['id']):
+                        api.retweet(api.user_timeline(user_id=1476300686165954564,count=20,tweet_mode='extended')[0]._json['id'])
+                        print('[bold light_goldenrod1]'+time.ctime()+' | RETWEET | Covid [/bold light_goldenrod1]')
+                        covid = api.user_timeline(user_id=1476300686165954564,count=20,tweet_mode='extended')[0]._json['id']
+                        time.sleep(1800)
         except :
-                print(time.ctime()+' | ERROR | No Covid Data ')                
+                print('[bold bright_red]'+time.ctime()+' | ERROR | Covid Data [/bold bright_red]')                
         response = requests.get(url).text
         article = xml.xml_tools(response,'item')
 
@@ -88,17 +84,17 @@ while certif == False:
                                 already == True
                 if not already:
                         timeline.append(latest)
-                        print(time.ctime()+' | ADD | '+timeline[-1]['title'])
+                        print('[bold light_slate_blue]'+time.ctime()+' | ADD | '+timeline[-1]['title']+'[/bold light_slate_blue]')
                         break
 
         if not timeline:
-                print(time.ctime()+'| ERROR | Nothing to tweet')
+                print('[bold sandy_brown]'+time.ctime()+'| ERROR | Nothing to tweet [/bold sandy_brown]')
         else:
                 try:
                         r = requests.get(timeline[0]['img'], allow_redirects=True)
                         open('tmp.png', 'wb').write(r.content)
                         api.update_with_media(filename='tmp.png',status='| #FRANCE | ~ '+timeline[0]['title'])
-                        print(time.ctime()+' | TWEET | '+timeline[0]['title'])
+                        print('[bold green4]'+time.ctime()+' | TWEET | '+timeline[0]['title']+'[/bold green4]')
                         data['done'].append(timeline[0])
                         hst = open('hst.json',"w")
                         json.dump(data, hst, indent = 6)
@@ -111,6 +107,6 @@ while certif == False:
                         hst = open('hst.json',"w")
                         json.dump(data, hst, indent = 6)
                         hst.close()
-                        print(time.ctime()+' | TWEET | '+timeline[0]['title'])
+                        print('[bold green4]'+time.ctime()+' | TWEET | '+timeline[0]['title']+'[/bold green4]')
                         timeline.pop(0)
                         time.sleep(1800)
