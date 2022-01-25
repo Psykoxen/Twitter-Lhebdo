@@ -38,7 +38,7 @@ def replace(text):
         text = text.replace("&lt;","<")
         text = text.replace("&#039;","'")
         return text
-"light_goldenrod1"
+
 while certif == False:
         try :
                 if meteo != (api.user_timeline(user_id=1457877644184330248,count=20, tweet_mode = 'extended')[0]._json['id']):
